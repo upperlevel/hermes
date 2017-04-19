@@ -5,6 +5,8 @@ import xyz.upperlevel.utils.packet.client.Client;
 import xyz.upperlevel.utils.packet.client.channel.ClientChannelSystem;
 import xyz.upperlevel.utils.packet.client.channel.impl.SimpleClientChannelSystem;
 
+import java.util.function.BiConsumer;
+
 public class NettyClient implements Client {
 
     @Getter
@@ -20,5 +22,9 @@ public class NettyClient implements Client {
     @Override
     public void stop() throws InterruptedException {
         connection.close();
+    }
+
+    public static void open(String ip, int port, BiConsumer<NettyClient, Exception> callback) {
+
     }
 }
