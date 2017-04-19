@@ -18,7 +18,7 @@ import static xyz.upperlevel.utils.packet.TestPacket.PROTOCOL;
 
 public class NettyConnectionTest {
 
-    static final String HOST = "localhosta";
+    static final String HOST = "localhost";
     static final int PORT = 25346;
     static final CountDownLatch latch = new CountDownLatch(2);
 
