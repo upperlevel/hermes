@@ -6,6 +6,7 @@ import xyz.upperlevel.utils.event.GeneralEventListener;
 import xyz.upperlevel.utils.event.impl.BaseGeneralEventListener;
 
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class ConnectionEventListener extends BaseGeneralEventListener<ConnectionEvent> implements GeneralEventListener<ConnectionEvent> {
     private final BiConsumer<Connection, Object> consumer;
@@ -30,5 +31,13 @@ public class ConnectionEventListener extends BaseGeneralEventListener<Connection
 
     public static <E> ConnectionEventListener listener(Class<E> clazz, BiConsumer<Connection, E> consumer) {
         return new ConnectionEventListener(clazz, consumer);
+    }
+
+    public static <E> ConnectionEventListener listener(Class<E> clazz, Consumer<E> consumer, byte priority) {
+        return new ConnectionEventListener(clazz, priority, (c, e) -> consumer.accept(e));
+    }
+
+    public static <E> ConnectionEventListener listener(Class<E> clazz, Consumer<E> consumer) {
+        return new ConnectionEventListener(clazz, (c, e) -> consumer.accept(e));
     }
 }
