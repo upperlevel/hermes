@@ -28,6 +28,12 @@ public class DirectServer implements Server {
         this.eventManager = eventManager;
     }
 
+    public DirectServer() {
+        channelSystem = new SimpleServerChannelSystem(this);
+        defaultChannel = null;
+        eventManager = new EventManager();
+    }
+
     public DirectServer(Channel defaultChannel) {
         this.channelSystem = new SimpleServerChannelSystem(this);
         this.defaultChannel = defaultChannel;
