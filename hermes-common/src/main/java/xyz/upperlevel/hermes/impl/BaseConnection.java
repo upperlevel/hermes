@@ -5,7 +5,7 @@ import lombok.Setter;
 import xyz.upperlevel.hermes.Connection;
 import xyz.upperlevel.hermes.channel.ChannelSystemChild;
 import xyz.upperlevel.hermes.channel.packets.ChannelMessagePacket;
-import xyz.upperlevel.utils.event.impl.def.EventManager;
+import xyz.upperlevel.event.impl.def.EventManager;
 import xyz.upperlevel.hermes.Packet;
 import xyz.upperlevel.hermes.channel.Channel;
 

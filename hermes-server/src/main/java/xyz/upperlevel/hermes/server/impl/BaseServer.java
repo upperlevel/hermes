@@ -3,7 +3,7 @@ package xyz.upperlevel.hermes.server.impl;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.upperlevel.hermes.server.Server;
-import xyz.upperlevel.utils.event.impl.def.EventManager;
+import xyz.upperlevel.event.impl.def.EventManager;
 import xyz.upperlevel.hermes.channel.Channel;
 
 public abstract class BaseServer implements Server {

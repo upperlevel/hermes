@@ -4,7 +4,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import xyz.upperlevel.hermes.channel.ChannelSystemChild;
 import xyz.upperlevel.hermes.event.impl.ConnectionCloseEvent;
-import xyz.upperlevel.utils.event.impl.def.EventManager;
+import xyz.upperlevel.event.impl.def.EventManager;
 import xyz.upperlevel.hermes.Packet;
 import xyz.upperlevel.hermes.channel.Channel;
 import xyz.upperlevel.hermes.event.impl.ConnectionOpenEvent;

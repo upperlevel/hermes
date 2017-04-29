@@ -1,6 +1,6 @@
 package xyz.upperlevel.hermes.event;
 
-import xyz.upperlevel.utils.event.GeneralEventManager;
+import xyz.upperlevel.event.GeneralEventManager;
 import xyz.upperlevel.hermes.Connection;
 
 import java.util.function.BiConsumer;

@@ -8,7 +8,7 @@ import xyz.upperlevel.hermes.Protocol;
 import xyz.upperlevel.hermes.channel.packets.ChannelMessagePacket;
 import xyz.upperlevel.hermes.event.ConnectionEvent;
 import xyz.upperlevel.hermes.event.ConnectionEventManager;
-import xyz.upperlevel.utils.event.EventPriority;
+import xyz.upperlevel.event.EventPriority;
 import xyz.upperlevel.hermes.Packet;
 
 import java.util.function.BiConsumer;

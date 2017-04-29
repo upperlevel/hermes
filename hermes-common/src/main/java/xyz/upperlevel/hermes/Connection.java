@@ -1,7 +1,7 @@
 package xyz.upperlevel.hermes;
 
 import xyz.upperlevel.hermes.channel.ChannelSystemChild;
-import xyz.upperlevel.utils.event.impl.def.EventManager;
+import xyz.upperlevel.event.impl.def.EventManager;
 import xyz.upperlevel.hermes.channel.Channel;
 
 public interface Connection {

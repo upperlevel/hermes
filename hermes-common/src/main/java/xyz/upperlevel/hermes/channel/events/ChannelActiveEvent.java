@@ -1,7 +1,7 @@
 package xyz.upperlevel.hermes.channel.events;
 
 import lombok.RequiredArgsConstructor;
-import xyz.upperlevel.utils.event.Event;
+import xyz.upperlevel.event.Event;
 import xyz.upperlevel.hermes.Packet;
 
 /**

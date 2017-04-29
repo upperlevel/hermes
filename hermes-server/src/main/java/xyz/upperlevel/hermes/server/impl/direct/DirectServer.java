@@ -6,7 +6,7 @@ import xyz.upperlevel.hermes.server.Server;
 import xyz.upperlevel.hermes.server.channel.ServerChannelSystem;
 import xyz.upperlevel.hermes.server.channel.ServerChannelSystemChild;
 import xyz.upperlevel.hermes.server.channel.impl.SimpleServerChannelSystem;
-import xyz.upperlevel.utils.event.impl.def.EventManager;
+import xyz.upperlevel.event.impl.def.EventManager;
 import xyz.upperlevel.hermes.Connection;
 import xyz.upperlevel.hermes.channel.Channel;
 

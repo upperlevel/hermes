@@ -1,9 +1,9 @@
 package xyz.upperlevel.hermes.event;
 
 import xyz.upperlevel.hermes.Connection;
-import xyz.upperlevel.utils.event.EventPriority;
-import xyz.upperlevel.utils.event.GeneralEventListener;
-import xyz.upperlevel.utils.event.impl.BaseGeneralEventListener;
+import xyz.upperlevel.event.EventPriority;
+import xyz.upperlevel.event.GeneralEventListener;
+import xyz.upperlevel.event.impl.BaseGeneralEventListener;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;

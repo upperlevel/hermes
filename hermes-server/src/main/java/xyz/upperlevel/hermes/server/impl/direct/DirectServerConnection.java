@@ -1,7 +1,7 @@
 package xyz.upperlevel.hermes.server.impl.direct;
 
 import lombok.Getter;
-import xyz.upperlevel.utils.event.impl.def.EventManager;
+import xyz.upperlevel.event.impl.def.EventManager;
 import xyz.upperlevel.hermes.channel.Channel;
 import xyz.upperlevel.hermes.channel.ChannelSystemChild;
 import xyz.upperlevel.hermes.impl.direct.DirectConnection;

@@ -1,6 +1,6 @@
 package xyz.upperlevel.hermes.server;
 
-import xyz.upperlevel.utils.event.impl.def.EventManager;
+import xyz.upperlevel.event.impl.def.EventManager;
 import xyz.upperlevel.hermes.Endpoint;
 import xyz.upperlevel.hermes.channel.Channel;
 

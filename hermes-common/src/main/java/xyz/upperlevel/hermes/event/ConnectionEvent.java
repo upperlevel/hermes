@@ -2,7 +2,7 @@ package xyz.upperlevel.hermes.event;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import xyz.upperlevel.utils.event.Event;
+import xyz.upperlevel.event.Event;
 import xyz.upperlevel.hermes.Connection;
 
 @RequiredArgsConstructor
