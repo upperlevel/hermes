@@ -1,5 +1,8 @@
 package xyz.upperlevel.hermes;
 
+import xyz.upperlevel.event.EventHandler;
+import xyz.upperlevel.event.EventPriority;
+import xyz.upperlevel.event.Listener;
 import xyz.upperlevel.hermes.channel.Channel;
 import xyz.upperlevel.hermes.client.impl.direct.DirectClient;
 import xyz.upperlevel.hermes.server.impl.direct.DirectServer;
@@ -21,10 +24,11 @@ public class DirectConnectionTest {
         DirectServerConnection seConn = server.newConnection(client.getConnection());
         client.getConnection().setOther(seConn);
 
-        clChannel.register(
+        /*clChannel.register(
                 TestPacket.class,
                 (TestPacket p) -> System.out.println(p.testString + ": " + p.testInt)
-        );
+        );*/
+        clChannel.register(new PacketListener());
 
         seConn.setCopy(false);
         seConn.send(seChannel, new TestPacket("price", 100));
@@ -48,6 +52,19 @@ public class DirectConnectionTest {
             );
 
             seConn.send(subSeCh, new TestPacket("sub channel working?", 1));
+        }
+    }
+
+    public static class PacketListener implements Listener {
+
+        @EventHandler
+        protected void onTestPacket(TestPacket packet) {
+            System.out.println(packet.testString + ": " + packet.testInt);
+        }
+
+        @EventHandler(priority = EventPriority.HIGH)
+        protected void onTestPacketConn(Connection conn, TestPacket packet) {
+            System.out.println("Received new packet from " + conn);
         }
     }
 

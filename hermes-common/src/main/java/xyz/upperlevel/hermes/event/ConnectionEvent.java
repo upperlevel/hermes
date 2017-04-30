@@ -6,7 +6,7 @@ import xyz.upperlevel.event.Event;
 import xyz.upperlevel.hermes.Connection;
 
 @RequiredArgsConstructor
-public class ConnectionEvent<E> implements Event {
+public class ConnectionEvent<E extends Event> implements Event {
     @Getter
     private final Connection connection;
     @Getter

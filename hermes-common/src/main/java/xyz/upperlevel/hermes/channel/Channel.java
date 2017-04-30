@@ -3,15 +3,16 @@ package xyz.upperlevel.hermes.channel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import xyz.upperlevel.event.EventPriority;
+import xyz.upperlevel.event.Listener;
 import xyz.upperlevel.hermes.Connection;
+import xyz.upperlevel.hermes.Packet;
 import xyz.upperlevel.hermes.Protocol;
 import xyz.upperlevel.hermes.channel.packets.ChannelMessagePacket;
 import xyz.upperlevel.hermes.event.ConnectionEvent;
+import xyz.upperlevel.hermes.event.ConnectionEventListener;
 import xyz.upperlevel.hermes.event.ConnectionEventManager;
-import xyz.upperlevel.event.EventPriority;
-import xyz.upperlevel.hermes.Packet;
 
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 @Accessors(chain = true)
 public class Channel {
@@ -52,11 +53,11 @@ public class Channel {
     }
 
 
-    public <T extends Packet> void register(Class<T> clazz, byte priority, BiConsumer<Connection, T> listener) {
+    public <T extends Packet> void register(Class<T> clazz, byte priority, ConnectionEventListener.Listener<T> listener) {
         getEventManager().register(clazz, listener, priority);
     }
 
-    public <T extends Packet> void register(Class<T> clazz, BiConsumer<Connection, T> listener) {
+    public <T extends Packet> void register(Class<T> clazz, ConnectionEventListener.Listener<T> listener) {
         register(clazz, EventPriority.NORMAL, listener);
     }
 
@@ -66,6 +67,10 @@ public class Channel {
 
     public <T extends Packet> void register(Class<T> clazz, Consumer<T> listener) {
         register(clazz, EventPriority.NORMAL, listener);
+    }
+
+    public void register(Listener packetListener) {
+        getEventManager().register(packetListener);
     }
 
     public void receive(Connection conn, Packet msg) {
