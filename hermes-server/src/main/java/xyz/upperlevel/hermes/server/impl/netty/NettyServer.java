@@ -3,6 +3,7 @@ package xyz.upperlevel.hermes.server.impl.netty;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import xyz.upperlevel.hermes.Connection;
 import xyz.upperlevel.hermes.channel.Channel;
 import xyz.upperlevel.hermes.event.impl.ConnectionOpenEvent;
 import xyz.upperlevel.hermes.server.channel.ServerChannelSystem;
@@ -42,6 +43,12 @@ public class NettyServer extends BaseServer {
     @Override
     public void stop() {
         stop.run();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Set<Connection> getConnections() {
+        return (Set) connections;
     }
 
     public NettyServerConnection newConnection() {

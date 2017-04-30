@@ -2,13 +2,16 @@ package xyz.upperlevel.hermes.server.impl.direct;
 
 import lombok.Getter;
 import lombok.Setter;
+import xyz.upperlevel.event.impl.def.EventManager;
+import xyz.upperlevel.hermes.Connection;
+import xyz.upperlevel.hermes.channel.Channel;
 import xyz.upperlevel.hermes.server.Server;
 import xyz.upperlevel.hermes.server.channel.ServerChannelSystem;
 import xyz.upperlevel.hermes.server.channel.ServerChannelSystemChild;
 import xyz.upperlevel.hermes.server.channel.impl.SimpleServerChannelSystem;
-import xyz.upperlevel.event.impl.def.EventManager;
-import xyz.upperlevel.hermes.Connection;
-import xyz.upperlevel.hermes.channel.Channel;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class DirectServer implements Server {
 
@@ -21,6 +24,8 @@ public class DirectServer implements Server {
 
     @Getter
     private final EventManager eventManager;
+
+    private Set<DirectServerConnection> connections = new HashSet<>();
 
     public DirectServer(Channel defaultChannel, ServerChannelSystem channelSystem, EventManager eventManager) {
         this.channelSystem = channelSystem;
@@ -52,11 +57,18 @@ public class DirectServer implements Server {
         conn.setDefaultChannel(defaultChannel);
         conn.setOther(connection);
         child.init(conn);
+        connections.add(conn);
         return conn;
     }
 
     @Override
     public void stop() {
         throw new IllegalStateException("Cannot stop a direct server");
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Set<Connection> getConnections() {
+        return (Set)connections;
     }
 }

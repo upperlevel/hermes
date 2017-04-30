@@ -24,10 +24,6 @@ public class DirectConnectionTest {
         DirectServerConnection seConn = server.newConnection(client.getConnection());
         client.getConnection().setOther(seConn);
 
-        /*clChannel.register(
-                TestPacket.class,
-                (TestPacket p) -> System.out.println(p.testString + ": " + p.testInt)
-        );*/
         clChannel.register(new PacketListener());
 
         seConn.setCopy(false);
