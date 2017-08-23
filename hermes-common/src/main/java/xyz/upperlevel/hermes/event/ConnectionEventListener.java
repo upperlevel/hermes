@@ -8,37 +8,33 @@ import xyz.upperlevel.hermes.Connection;
 
 import java.util.function.Consumer;
 
-public class ConnectionEventListener extends BaseGeneralEventListener<ConnectionEvent> implements GeneralEventListener<ConnectionEvent> {
-    private final Listener<Event> consumer;
+public abstract class ConnectionEventListener extends BaseGeneralEventListener<ConnectionEvent> implements GeneralEventListener<ConnectionEvent> {
 
-    @SuppressWarnings("unchecked")
-    public <E extends Event> ConnectionEventListener(Class<E> clazz, byte priority, Listener<E> consumer) {
+    public ConnectionEventListener(Class<?> clazz, byte priority) {
         super(clazz, priority);
-        this.consumer = (Listener<Event>) consumer;
     }
 
-    public <E extends Event> ConnectionEventListener(Class<E> clazz, Listener<E> consumer) {
-        this(clazz, EventPriority.NORMAL, consumer);
+    public ConnectionEventListener(Class<?> clazz) {
+        super(clazz, EventPriority.NORMAL);
     }
 
-    public void call(ConnectionEvent<?> event) {
-        consumer.onCall(event.getConnection(), event.getEvent());
-    }
+    public abstract void call(ConnectionEvent<?> event);
+
 
     public static <E extends Event> ConnectionEventListener listener(Class<E> clazz, Listener<E> consumer, byte priority) {
-        return new ConnectionEventListener(clazz, priority, consumer);
+        return new SimpleConnectionEventListener(clazz, priority, consumer);
     }
 
     public static <E extends Event> ConnectionEventListener listener(Class<E> clazz, Listener<E> consumer) {
-        return new ConnectionEventListener(clazz, consumer);
+        return new SimpleConnectionEventListener(clazz, consumer);
     }
 
     public static <E extends Event> ConnectionEventListener listener(Class<E> clazz, Consumer<E> consumer, byte priority) {
-        return new ConnectionEventListener(clazz, priority, (c, e) -> consumer.accept(e));
+        return new SimpleConnectionEventListener(clazz, priority, (c, e) -> consumer.accept(e));
     }
 
     public static <E extends Event> ConnectionEventListener listener(Class<E> clazz, Consumer<E> consumer) {
-        return new ConnectionEventListener(clazz, (c, e) -> consumer.accept(e));
+        return new SimpleConnectionEventListener(clazz, (c, e) -> consumer.accept(e));
     }
 
     public interface Listener<E extends Event> {

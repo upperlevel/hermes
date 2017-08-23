@@ -62,7 +62,7 @@ public class IdProtocol implements Protocol {
         if(data.length < Short.BYTES) throw new IllegalArgumentException("The data passed isn't legal");
         int id = ByteBuffer.wrap(data, 0, Short.BYTES).getShort() & 0xFF;
 
-        if(id < 0 || id > byId.length)
+        if(id > byId.length)
             throw new IllegalArgumentException("Illegal data received! id:" + id + " data " + DatatypeConverter.printHexBinary(data));
 
         IdConverterData c = byId[id];

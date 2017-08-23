@@ -1,5 +1,6 @@
 package xyz.upperlevel.hermes.channel.packets;
 
+import lombok.EqualsAndHashCode;
 import xyz.upperlevel.hermes.Packet;
 import xyz.upperlevel.hermes.PacketConverter;
 import xyz.upperlevel.hermes.channel.Channel;
@@ -9,6 +10,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
+@EqualsAndHashCode
 public class ChannelMessagePacket implements Packet {
     public static final ChannelMessagePacketConverter CONVERTER = new ChannelMessagePacketConverter();
     public static Charset CHARSET = StandardCharsets.UTF_8;
@@ -32,12 +34,10 @@ public class ChannelMessagePacket implements Packet {
 
         @Override
         public ChannelMessagePacket toPacket(byte[] data) {
-            ChannelMessagePacket packet = new ChannelMessagePacket(
+            return new ChannelMessagePacket(
                     ByteBuffer.wrap(data, 0, Short.BYTES).getShort(),
                     Arrays.copyOfRange(data, Short.BYTES, data.length)
             );
-
-            return packet;
         }
     }
 
