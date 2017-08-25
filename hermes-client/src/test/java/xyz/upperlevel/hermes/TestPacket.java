@@ -1,37 +1,37 @@
 package xyz.upperlevel.hermes;
 
-import lombok.Data;
+import io.netty.buffer.ByteBuf;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
-import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 public class TestPacket implements Packet {
-    public static TestPacketConverter CONVERTER = new TestPacketConverter();
     public static Protocol PROTOCOL = Protocol.builder()
-            .subChannels()
-            .register(TestPacket.class, CONVERTER)
+            .enableSubChannels()
+            .packet(TestPacket.class, PacketSide.SHARED)
             .build();
 
-    public final String testString;
-    public final int testInt;
+    public String testString;
+    public int testInt;
 
-    public static class TestPacketConverter implements PacketConverter<TestPacket> {
+    @Override
+    public void toData(ByteBuf out) {
+        out.writeBytes(testString.getBytes(StandardCharsets.UTF_8));
+        System.out.println("BYTES: " + (testString.getBytes(StandardCharsets.UTF_8).length + 4));
+        out.writeInt(testInt);
+    }
 
-        @Override
-        public byte[] toData(TestPacket packet) {
-            byte[] rawStr = packet.getTestString().getBytes();
-            return ByteBuffer.allocate(rawStr.length + 4)
-                    .put(rawStr)
-                    .putInt(packet.getTestInt())
-                    .array();
-        }
-
-        @Override
-        public TestPacket toPacket(byte[] data) {
-            return new TestPacket(
-                    new String(data, 0, data.length - 4),
-                    ByteBuffer.wrap(data, data.length - 4, 4).getInt()
-            );
-        }
+    @Override
+    public void fromData(ByteBuf in) {
+        System.out.println("BYTES: " + in.readableBytes());
+        byte[] rawStr = new byte[in.readableBytes() - 4];
+        in.readBytes(rawStr);
+        testString = new String(rawStr, StandardCharsets.UTF_8);
+        testInt = in.readInt();
     }
 }

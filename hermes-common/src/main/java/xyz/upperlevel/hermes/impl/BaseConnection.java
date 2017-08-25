@@ -2,21 +2,19 @@ package xyz.upperlevel.hermes.impl;
 
 import lombok.Getter;
 import lombok.Setter;
-import xyz.upperlevel.hermes.Connection;
-import xyz.upperlevel.hermes.channel.ChannelSystemChild;
-import xyz.upperlevel.hermes.channel.packets.ChannelMessagePacket;
 import xyz.upperlevel.event.impl.def.EventManager;
+import xyz.upperlevel.hermes.Connection;
 import xyz.upperlevel.hermes.Packet;
 import xyz.upperlevel.hermes.channel.Channel;
+import xyz.upperlevel.hermes.channel.ChannelSystemChild;
+import xyz.upperlevel.hermes.channel.packets.ChannelMessagePacket;
 
 public abstract class BaseConnection implements Connection {
     @Getter
+    private final EventManager eventManager;
+    @Getter
     @Setter
     private Channel defaultChannel;
-
-    @Getter
-    private final EventManager eventManager;
-
     @Getter
     @Setter
     private ChannelSystemChild channelSystemChild;
@@ -41,7 +39,7 @@ public abstract class BaseConnection implements Connection {
 
     @Override
     public void send(Channel channel, Packet message) {
-        if(channel == getDefaultChannel())
+        if (channel == getDefaultChannel())
             send(message);
         else
             send(ChannelMessagePacket.newMessage(channel, message));

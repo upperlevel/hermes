@@ -23,8 +23,4 @@ public class NettyClient implements Client {
     public void stop() throws InterruptedException {
         connection.close();
     }
-
-    public static void open(String ip, int port, BiConsumer<NettyClient, Exception> callback) {
-
-    }
 }

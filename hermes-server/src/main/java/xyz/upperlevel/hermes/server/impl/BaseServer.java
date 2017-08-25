@@ -2,9 +2,9 @@ package xyz.upperlevel.hermes.server.impl;
 
 import lombok.Getter;
 import lombok.Setter;
-import xyz.upperlevel.hermes.server.Server;
 import xyz.upperlevel.event.impl.def.EventManager;
 import xyz.upperlevel.hermes.channel.Channel;
+import xyz.upperlevel.hermes.server.Server;
 
 public abstract class BaseServer implements Server {
     @Getter

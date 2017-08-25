@@ -1,12 +1,14 @@
 package xyz.upperlevel.hermes.impl.direct;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import lombok.Getter;
 import lombok.Setter;
-import xyz.upperlevel.hermes.channel.ChannelSystemChild;
 import xyz.upperlevel.event.impl.def.EventManager;
 import xyz.upperlevel.hermes.Connection;
 import xyz.upperlevel.hermes.Packet;
 import xyz.upperlevel.hermes.channel.Channel;
+import xyz.upperlevel.hermes.channel.ChannelSystemChild;
 import xyz.upperlevel.hermes.impl.BaseConnection;
 
 public abstract class DirectConnection extends BaseConnection {
@@ -47,13 +49,15 @@ public abstract class DirectConnection extends BaseConnection {
 
     @Override
     protected void send(Packet packet) {
-        if(getDefaultChannel() == null)
+        if (getDefaultChannel() == null)
             throw new IllegalStateException("Default channel not set!");
 
         final Channel otherCh = other.getDefaultChannel();
-        if(copy) {
-            byte[] msg = getDefaultChannel().getProtocol().convert(packet);
-            packet = otherCh.getProtocol().convert(msg);
+        if (copy) {
+            ByteBuf buffer = Unpooled.buffer();
+
+            getDefaultChannel().getProtocol().toData(packet, buffer);
+            packet = otherCh.getProtocol().fromData(buffer);
         }
         otherCh.receive(other, packet);
     }

@@ -3,49 +3,52 @@ package xyz.upperlevel.hermes.channel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import xyz.upperlevel.event.EventPriority;
-import xyz.upperlevel.event.Listener;
-import xyz.upperlevel.hermes.Connection;
-import xyz.upperlevel.hermes.Packet;
-import xyz.upperlevel.hermes.Protocol;
+import xyz.upperlevel.event.impl.def.EventManager;
+import xyz.upperlevel.hermes.*;
 import xyz.upperlevel.hermes.channel.packets.ChannelMessagePacket;
-import xyz.upperlevel.hermes.event.ConnectionEvent;
-import xyz.upperlevel.hermes.event.ConnectionEventListener;
-import xyz.upperlevel.hermes.event.ConnectionEventManager;
 
-import java.util.function.Consumer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Accessors(chain = true)
 public class Channel {
 
     @Getter
-    @Setter
-    private int id = BaseChannelSystem.UNASSIGNED;
-
-    @Getter
     private final String name;
     @Getter
-    private final ConnectionEventManager eventManager;
+    private final EventManager eventManager;
     @Getter
     @Setter
-    private Protocol protocol;
+    private int id = BaseChannelSystem.UNASSIGNED;
+    private Map<Class<? extends Packet>, List<PacketListener<?>>> listeners = new HashMap<>();
+    @Getter
+    @Setter
+    private PacketConverter protocol;
 
-    public Channel(String name, ConnectionEventManager eventManager) {
-        if(!isNameLegal(name))
+    public Channel(String name, EventManager eventManager) {
+        if (!isNameLegal(name))
             throw new IllegalArgumentException("Invalid name! it can only contain chars: \"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_\"");
         this.name = name;
         this.eventManager = eventManager;
 
         //Sub-channels support
-        eventManager.register(ChannelMessagePacket.class, (Connection conn, ChannelMessagePacket pkt) -> conn.getChannelSystemChild().onReceive(pkt));
+        register(ChannelMessagePacket.class, (connection, packet) -> connection.getChannelSystemChild().onReceive(packet));
     }
 
     public Channel(String name) {
-        this(name, new ConnectionEventManager());
+        this(name, new EventManager());
+    }
+
+    public Channel setProtocol(Protocol protocol, PacketSide side) {
+        setProtocol(protocol.compile(side));
+        return this;
     }
 
     protected boolean isNameLegal(String name) {
         return name.chars().allMatch(i ->
-                        (i >= 'a' && i <= 'z') ||
+                (i >= 'a' && i <= 'z') ||
                         (i >= 'A' && i <= 'Z') ||
                         (i >= '0' && i <= '9') ||
                         i == '_' ||
@@ -53,27 +56,18 @@ public class Channel {
     }
 
 
-    public <T extends Packet> void register(Class<T> clazz, byte priority, ConnectionEventListener.Listener<T> listener) {
-        getEventManager().register(clazz, listener, priority);
+    public <T extends Packet> void register(Class<T> clazz, PacketListener<T> listener) {
+        listeners.computeIfAbsent(clazz, c -> new ArrayList<>()).add(listener);
     }
 
-    public <T extends Packet> void register(Class<T> clazz, ConnectionEventListener.Listener<T> listener) {
-        register(clazz, EventPriority.NORMAL, listener);
-    }
 
-    public <T extends Packet> void register(Class<T> clazz, byte priority, Consumer<T> listener) {
-        register(clazz, priority, (c, p) -> listener.accept(p));
-    }
-
-    public <T extends Packet> void register(Class<T> clazz, Consumer<T> listener) {
-        register(clazz, EventPriority.NORMAL, listener);
-    }
-
-    public void register(Listener packetListener) {
-        getEventManager().register(packetListener);
-    }
-
+    @SuppressWarnings("unchecked")
     public void receive(Connection conn, Packet msg) {
-        getEventManager().call(new ConnectionEvent<>(conn, msg), msg.getClass());
+        List<PacketListener<?>> receivers = listeners.get(msg.getClass());
+        if (receivers != null) {
+            for (PacketListener listener : receivers) {
+                listener.onPacket(conn, msg);
+            }
+        }
     }
 }

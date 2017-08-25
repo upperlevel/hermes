@@ -20,7 +20,6 @@ public abstract class ConnectionEventListener extends BaseGeneralEventListener<C
 
     public abstract void call(ConnectionEvent<?> event);
 
-
     public static <E extends Event> ConnectionEventListener listener(Class<E> clazz, Listener<E> consumer, byte priority) {
         return new SimpleConnectionEventListener(clazz, priority, consumer);
     }

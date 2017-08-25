@@ -4,12 +4,12 @@ import io.netty.channel.ChannelFuture;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class NettyChannelAcceptor implements Runnable{
+public class NettyChannelAcceptor implements Runnable {
     private final ChannelFuture channelAcceptor;
 
     @Override
     public void run() {
-        while(true) {
+        while (true) {
             try {
                 channelAcceptor.sync();
             } catch (InterruptedException e) {

@@ -17,18 +17,14 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class NettyServer extends BaseServer {
     private final Runnable stop;
-
+    @Getter
+    private final NettyServerInitializer initializer = new NettyServerInitializer(this);
+    @Getter
+    private final ServerChannelSystem channelSystem = new SimpleServerChannelSystem(this);
     @Getter
     @Setter
     private Channel defaultChannel;
-
     private Set<NettyServerConnection> connections = new HashSet<>();
-
-    @Getter
-    private final NettyServerInitializer initializer = new NettyServerInitializer(this);
-
-    @Getter
-    private final ServerChannelSystem channelSystem = new SimpleServerChannelSystem(this);
 
     public void onOpen(NettyServerConnection connection) {
         assert connection.getParent() == this;
@@ -56,7 +52,7 @@ public class NettyServer extends BaseServer {
         NettyServerConnection conn = new NettyServerConnection(this, child);
         child.init(conn);
         ConnectionOpenEvent event = new ConnectionOpenEvent(conn);
-        if(getEventManager().call(event)) {
+        if (getEventManager().call(event)) {
             connections.add(conn);
             return conn;
         } else

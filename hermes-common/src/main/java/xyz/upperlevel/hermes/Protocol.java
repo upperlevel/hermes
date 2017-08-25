@@ -1,40 +1,16 @@
 package xyz.upperlevel.hermes;
 
-import lombok.Data;
-import xyz.upperlevel.hermes.impl.IdProtocol;
-
-import java.util.List;
+import java.util.Set;
 
 public interface Protocol {
 
-    <T extends Packet> PacketConverter<T> getConverter(Class<T> packet);
+    boolean isRegistered(Class<? extends Packet> packet);
 
-    default boolean isRegistered(Class<? extends Packet> packet) {
-        return getConverter(packet) != null;
-    }
+    Set<Class<?>> getRegistered();
 
-    <T extends Packet> byte[] convert(T o, Class<T> clazz);
-
-    Packet convert(byte[] data);
-
-    @SuppressWarnings("unchecked")
-    default byte[] convert(Packet packet) {
-        return convert(packet, (Class<Packet>)packet.getClass());
-    }
-
-    //----------------HELPER CLASSES
-
-    @Data
-    class ConverterData<T extends Packet> {
-        public final Class<T> clazz;
-        public final PacketConverter<T> converter;
-    }
+    PacketConverter compile(PacketSide side);
 
     //----------------HELPER METHODS
-
-    static Protocol build(List<ConverterData> converters) {
-        return new IdProtocol(converters);
-    }
 
     static ProtocolBuilder builder() {
         return new ProtocolBuilder();

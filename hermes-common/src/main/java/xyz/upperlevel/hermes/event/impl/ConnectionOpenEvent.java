@@ -2,11 +2,11 @@ package xyz.upperlevel.hermes.event.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import xyz.upperlevel.hermes.Connection;
 import xyz.upperlevel.event.CancellableEvent;
+import xyz.upperlevel.hermes.Connection;
 
 @AllArgsConstructor
-public class ConnectionOpenEvent extends CancellableEvent{
+public class ConnectionOpenEvent extends CancellableEvent {
     @Getter
     private final Connection connection;
 }

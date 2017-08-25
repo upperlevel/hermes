@@ -17,14 +17,11 @@ public class DirectServer implements Server {
 
     @Getter
     private final ServerChannelSystem channelSystem;
-
+    @Getter
+    private final EventManager eventManager;
     @Getter
     @Setter
     private Channel defaultChannel;
-
-    @Getter
-    private final EventManager eventManager;
-
     private Set<DirectServerConnection> connections = new HashSet<>();
 
     public DirectServer(Channel defaultChannel, ServerChannelSystem channelSystem, EventManager eventManager) {
@@ -53,7 +50,7 @@ public class DirectServer implements Server {
 
     public DirectServerConnection newConnection(Connection connection) {
         ServerChannelSystemChild child = channelSystem.createChild();
-        DirectServerConnection conn =  new DirectServerConnection(this, child);
+        DirectServerConnection conn = new DirectServerConnection(this, child);
         conn.setDefaultChannel(defaultChannel);
         conn.setOther(connection);
         child.init(conn);
@@ -69,6 +66,6 @@ public class DirectServer implements Server {
     @Override
     @SuppressWarnings("unchecked")
     public Set<Connection> getConnections() {
-        return (Set)connections;
+        return (Set) connections;
     }
 }

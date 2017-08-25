@@ -3,9 +3,7 @@ package xyz.upperlevel.hermes.event;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import xyz.upperlevel.event.Event;
-import xyz.upperlevel.event.EventPriority;
 import xyz.upperlevel.event.GeneralEventManager;
-import xyz.upperlevel.event.impl.def.EventManager;
 import xyz.upperlevel.hermes.Connection;
 
 import java.lang.reflect.InvocationTargetException;
@@ -27,9 +25,9 @@ public class ConnectionEventManager extends GeneralEventManager<ConnectionEvent,
         Class<?>[] parameters = listener.getParameterTypes();
         argument = parameters[paramCount - 1];//paramCount == 1 ? parameters[0] : parameters[1];
 
-        if(!Event.class.isAssignableFrom(argument))
+        if (!Event.class.isAssignableFrom(argument))
             throw new IllegalArgumentException("Cannot derive EventListener from the argument method: bad argument type, it should be an Event (" + argument.getName());
-        if(paramCount == 2 && (Connection.class != parameters[0]))
+        if (paramCount == 2 && (Connection.class != parameters[0]))
             throw new IllegalArgumentException("Cannot derive EventListener from the argument method: bad argument type, only (Event) or (Connection, Event) accepted");
 
         listener.setAccessible(true);
@@ -80,7 +78,7 @@ public class ConnectionEventManager extends GeneralEventManager<ConnectionEvent,
         @Override
         public void call(ConnectionEvent<?> event) {
             try {
-                if(hasConnectionArgument)
+                if (hasConnectionArgument)
                     listener.invoke(instance, event.getConnection(), event.getEvent());
                 else
                     listener.invoke(instance, event.getEvent());

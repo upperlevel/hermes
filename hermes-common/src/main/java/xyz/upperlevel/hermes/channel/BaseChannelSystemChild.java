@@ -1,31 +1,36 @@
 package xyz.upperlevel.hermes.channel;
 
-import xyz.upperlevel.hermes.event.impl.ConnectionCloseEvent;
+import io.netty.buffer.Unpooled;
 import xyz.upperlevel.hermes.channel.events.ChannelActiveEvent;
 import xyz.upperlevel.hermes.channel.packets.ChannelMessagePacket;
-import xyz.upperlevel.hermes.event.ConnectionEvent;
+import xyz.upperlevel.hermes.event.impl.ConnectionCloseEvent;
+
+import javax.xml.bind.DatatypeConverter;
 
 public abstract class BaseChannelSystemChild implements ChannelSystemChild {
 
     //TODO: Reduce space usage
     protected final Channel[] used = new Channel[ChannelSystem.MAX_IDS];
 
-    protected void init() {
+    public BaseChannelSystemChild() {
         getConnection().getEventManager().register(ConnectionCloseEvent.class, this::onConnectionClose);
     }
 
     @Override
-    public void onReceive(ChannelMessagePacket packet) {//TODO could be optimized (?)
-        Channel ch = used[packet.id & 0xffff];
-        if(ch == null) {//Wakeup
+    public void onReceive(ChannelMessagePacket packet) {
+        int id = packet.id & 0xffff;
+        Channel ch = id == ChannelSystem.LAST_ID ? null : used[id & 0xffff];
+        if (ch == null) {//Wakeup
+            System.out.println("WAKEUP! " + new String(packet.message, ChannelMessagePacket.CHARSET));
             onWakeup(packet.id, new String(packet.message, ChannelMessagePacket.CHARSET));
-        } else {//Messae
+        } else {//Message
             onMessage(ch, packet.message);
         }
     }
 
     protected void onMessage(Channel channel, byte[] message) {
-        channel.receive(getConnection(), channel.getProtocol().convert(message));
+        System.out.println("CHANNEL SYSTEM: " + DatatypeConverter.printHexBinary(message));
+        channel.receive(getConnection(), channel.getProtocol().fromData(Unpooled.wrappedBuffer(message)));
     }
 
     protected abstract void onWakeup(short id, String name);
@@ -33,6 +38,6 @@ public abstract class BaseChannelSystemChild implements ChannelSystemChild {
     protected abstract void onConnectionClose(ConnectionCloseEvent event);
 
     protected void onChannelActive(Channel channel) {
-        channel.getEventManager().call(new ConnectionEvent<>(getConnection(), new ChannelActiveEvent()), ChannelActiveEvent.class);
+        channel.getEventManager().call(new ChannelActiveEvent(getConnection()));
     }
 }

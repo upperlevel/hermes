@@ -2,11 +2,11 @@ package xyz.upperlevel.hermes.impl.netty;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import xyz.upperlevel.hermes.channel.ChannelSystemChild;
-import xyz.upperlevel.hermes.event.impl.ConnectionCloseEvent;
 import xyz.upperlevel.event.impl.def.EventManager;
 import xyz.upperlevel.hermes.Packet;
 import xyz.upperlevel.hermes.channel.Channel;
+import xyz.upperlevel.hermes.channel.ChannelSystemChild;
+import xyz.upperlevel.hermes.event.impl.ConnectionCloseEvent;
 import xyz.upperlevel.hermes.event.impl.ConnectionOpenEvent;
 import xyz.upperlevel.hermes.impl.BaseConnection;
 
@@ -32,7 +32,7 @@ public abstract class NettyConnection extends BaseConnection {
 
     @Override
     protected void send(Packet packet) {
-        if(handle == null)
+        if (handle == null)
             throw new IllegalStateException("Connection not yet initialized");
         handle.write(packet);
         handle.flush();
@@ -45,7 +45,7 @@ public abstract class NettyConnection extends BaseConnection {
 
     @Override
     public void close() throws InterruptedException {
-        if(handle != null)
+        if (handle != null)
             handle.close().sync();
     }
 
@@ -66,7 +66,7 @@ public abstract class NettyConnection extends BaseConnection {
         @Override
         public void channelActive(final ChannelHandlerContext ctx) {
             handle = ctx.channel();
-            if(!onOpen()) {
+            if (!onOpen()) {
                 System.out.println("Connection refused");
                 ctx.close();
             } else System.out.println("Connection active");
@@ -81,7 +81,7 @@ public abstract class NettyConnection extends BaseConnection {
         public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
             assert msg instanceof Packet;
 
-            getDefaultChannel().receive(NettyConnection.this, (Packet)msg);
+            getDefaultChannel().receive(NettyConnection.this, (Packet) msg);
         }
     }
 }

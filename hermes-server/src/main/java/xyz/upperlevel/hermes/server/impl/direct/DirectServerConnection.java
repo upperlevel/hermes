@@ -7,7 +7,7 @@ import xyz.upperlevel.hermes.channel.ChannelSystemChild;
 import xyz.upperlevel.hermes.impl.direct.DirectConnection;
 import xyz.upperlevel.hermes.server.ServerConnection;
 
-public class DirectServerConnection extends DirectConnection implements ServerConnection{
+public class DirectServerConnection extends DirectConnection implements ServerConnection {
     @Getter
     private final DirectServer parent;
 

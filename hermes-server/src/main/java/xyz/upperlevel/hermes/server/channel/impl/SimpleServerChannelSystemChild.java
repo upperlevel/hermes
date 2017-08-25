@@ -17,11 +17,9 @@ import java.util.Set;
 public class SimpleServerChannelSystemChild extends BaseChannelSystemChild implements ServerChannelSystemChild {
     @Getter
     private final SimpleServerChannelSystem parent;
-
+    private final Set<String> pending = new HashSet<>();
     @Getter
     private ServerConnection connection;
-
-    private final Set<String> pending = new HashSet<>();
 
     @Override
     public Set<String> getPending() {
@@ -32,7 +30,7 @@ public class SimpleServerChannelSystemChild extends BaseChannelSystemChild imple
     protected void onWakeup(short id, String name) {
         //System.out.println("Server: wake up! (" + id + " -> " + name + ")");
         Channel channel = parent.get(name);
-        if(channel == null)
+        if (channel == null)
             pending.add(name);
         else
             onChannelActive(channel);//Call the event
@@ -48,13 +46,13 @@ public class SimpleServerChannelSystemChild extends BaseChannelSystemChild imple
 
         connection.send(connection.getDefaultChannel(), packet);
 
-        if(wasPending)
+        if (wasPending)
             onChannelActive(channel);//The client has already sent the wakeup message
     }
 
     @Override
     public void init(ServerConnection connection) {
-        if(this.connection != null)
+        if (this.connection != null)
             throw new IllegalStateException("Class already initialized");
         this.connection = connection;
     }

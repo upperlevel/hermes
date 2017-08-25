@@ -29,14 +29,6 @@ public class NettyServerOptions {
     private final LogLevel logLevel;
     private int port;
 
-    //Default values
-    public static class NettyServerOptionsBuilder {
-        private int bossThreads = 0, workerThreads = 0;
-        private boolean tcpNoDelay = true;
-        private int soBacklog = 100;
-        private LogLevel logLevel = LogLevel.INFO;
-    }
-
     public void openSync(Consumer<NettyServer> initializer, BiConsumer<NettyServer, Exception> callback) {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -71,7 +63,7 @@ public class NettyServerOptions {
             );*/
 
             //init
-            if(initializer != null)
+            if (initializer != null)
                 initializer.accept(server);
 
             // Start the client.
@@ -114,7 +106,7 @@ public class NettyServerOptions {
     public Future<NettyServer> openAsync(Consumer<NettyServer> initializer, String threadName) {
         CompletableFuture<NettyServer> future = new CompletableFuture<>();
         openAsync(initializer, (s, e) -> {
-            if(e != null)
+            if (e != null)
                 future.completeExceptionally(e);
             else
                 future.complete(s);
@@ -124,5 +116,13 @@ public class NettyServerOptions {
 
     public Future<NettyServer> openAsync(Consumer<NettyServer> initializer) {
         return openAsync(initializer, DEFAULT_THREAD_NAME);
+    }
+
+    //Default values
+    public static class NettyServerOptionsBuilder {
+        private int bossThreads = 0, workerThreads = 0;
+        private boolean tcpNoDelay = true;
+        private int soBacklog = 100;
+        private LogLevel logLevel = LogLevel.INFO;
     }
 }

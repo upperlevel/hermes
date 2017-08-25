@@ -1,9 +1,6 @@
 package xyz.upperlevel.hermes;
 
 import org.junit.Test;
-import xyz.upperlevel.event.EventHandler;
-import xyz.upperlevel.event.EventPriority;
-import xyz.upperlevel.event.Listener;
 import xyz.upperlevel.hermes.channel.Channel;
 import xyz.upperlevel.hermes.client.impl.direct.DirectClient;
 import xyz.upperlevel.hermes.server.impl.direct.DirectServer;
@@ -17,8 +14,8 @@ public class DirectConnectionTest {
 
     @Test
     public void main() {
-        Channel clChannel = new Channel("main").setProtocol(PROTOCOL);
-        Channel seChannel = new Channel("main").setProtocol(PROTOCOL);
+        Channel clChannel = new Channel("main").setProtocol(PROTOCOL, PacketSide.CLIENT);
+        Channel seChannel = new Channel("main").setProtocol(PROTOCOL, PacketSide.SERVER);
 
 
         DirectServer server = new DirectServer(seChannel);
@@ -27,14 +24,14 @@ public class DirectConnectionTest {
         DirectServerConnection seConn = server.newConnection(client.getConnection());
         client.getConnection().setOther(seConn);
 
-        PacketListener listener = new PacketListener();
-        clChannel.register(listener);
+        TestListener listener = new TestListener();
+        clChannel.register(TestPacket.class, listener);
 
         seConn.setCopy(false);
         listener.reset();
 
         seConn.send(seChannel, new TestPacket("price", 100));
-        assertEquals(2, listener.called);
+        assertEquals(1, listener.called);
         assertEquals("price", listener.lastString);
         assertEquals(100, listener.lastInt);
 
@@ -44,30 +41,30 @@ public class DirectConnectionTest {
 
         seConn.send(seChannel, new TestPacket("new price", 90));
 
-        assertEquals(2, listener.called);
+        assertEquals(1, listener.called);
         assertEquals("new price", listener.lastString);
         assertEquals(90, listener.lastInt);
 
         {
             Protocol subProto = Protocol.builder()
-                    .register(TestPacket.class, TestPacket.CONVERTER)
+                    .packet(TestPacket.class, PacketSide.SHARED)
                     .build();
 
-            Channel subClCh = new Channel("sub").setProtocol(subProto);
-            Channel subSeCh = new Channel("sub").setProtocol(subProto);
+            Channel subClCh = new Channel("sub").setProtocol(subProto, PacketSide.CLIENT);
+            Channel subSeCh = new Channel("sub").setProtocol(subProto, PacketSide.SERVER);
 
             server.getChannelSystem().register(subSeCh);
             client.getChannelSystem().register(subClCh);
 
-            PacketListener subListener = new PacketListener();
+            TestListener subListener = new TestListener();
 
-            subClCh.register(subListener);
+            subClCh.register(TestPacket.class, subListener);
 
             listener.reset();
             subListener.reset();
             seConn.send(subSeCh, new TestPacket("sub channels working", 194));
 
-            assertEquals(2, subListener.called);
+            assertEquals(1, subListener.called);
             assertEquals("sub channels working", subListener.lastString);
             assertEquals(194, subListener.lastInt);
 
@@ -77,30 +74,23 @@ public class DirectConnectionTest {
         }
     }
 
-    public class PacketListener implements Listener {
+    public class TestListener implements PacketListener<TestPacket> {
         public String lastString;
         public int lastInt;
         public int called;
-
-        @EventHandler
-        protected void onTestPacket(TestPacket packet) {
-            assertEquals(0, called);
-            called++;
-        }
-
-        @EventHandler(priority = EventPriority.HIGH)
-        protected void onTestPacketConn(Connection conn, TestPacket packet) {
-            assertNotNull(conn);
-            assertEquals(1, called);
-            called++;
-            lastString = packet.testString;
-            lastInt = packet.testInt;
-        }
 
         public void reset() {
             lastString = null;
             lastInt = 0;
             called = 0;
+        }
+
+        @Override
+        public void onPacket(Connection connection, TestPacket packet) {
+            assertNotNull(connection);
+            called++;
+            lastString = packet.testString;
+            lastInt = packet.testInt;
         }
     }
 

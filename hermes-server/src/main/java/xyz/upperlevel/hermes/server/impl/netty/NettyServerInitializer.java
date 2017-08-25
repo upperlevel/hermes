@@ -2,7 +2,7 @@ package xyz.upperlevel.hermes.server.impl.netty;
 
 import io.netty.channel.ChannelHandler;
 import lombok.AllArgsConstructor;
-import xyz.upperlevel.hermes.Protocol;
+import xyz.upperlevel.hermes.PacketConverter;
 import xyz.upperlevel.hermes.impl.netty.NettyChannelInitializer;
 
 @AllArgsConstructor
@@ -19,7 +19,7 @@ public class NettyServerInitializer extends NettyChannelInitializer {
             }
 
             @Override
-            public Protocol getProtocol() {
+            public PacketConverter getProtocol() {
                 return connection.getDefaultChannel().getProtocol();
             }
         };

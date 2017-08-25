@@ -6,11 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class BaseChannelSystem implements ChannelSystem {
-    private int nextId = FIRST_ID;
-
     protected final Map<String, Channel> channels = new HashMap<>();
-
     protected Channel[] id_map = new Channel[MAX_IDS];
+    private int nextId = FIRST_ID;
 
     @Override
     public void register(Channel ch) {
@@ -29,9 +27,9 @@ public abstract class BaseChannelSystem implements ChannelSystem {
     protected abstract void register0(Channel channel);
 
     protected void updateNextId() {
-        if(isOutOfIds())
+        if (isOutOfIds())
             return;
-        while(id_map[nextId & 0xffff] != null)
+        while (id_map[nextId & 0xffff] != null)
             nextId++;
     }
 
@@ -52,7 +50,7 @@ public abstract class BaseChannelSystem implements ChannelSystem {
 
     @Override
     public Channel get(int id) {
-        if(id >= FIRST_ID && id <= LAST_ID)
+        if (id >= FIRST_ID && id <= LAST_ID)
             return id_map[id & 0xffff];
         return null;
     }

@@ -1,7 +1,7 @@
 package xyz.upperlevel.hermes.client.impl.netty;
 
 import io.netty.channel.ChannelHandler;
-import xyz.upperlevel.hermes.Protocol;
+import xyz.upperlevel.hermes.PacketConverter;
 import xyz.upperlevel.hermes.impl.netty.NettyChannelInitializer;
 import xyz.upperlevel.hermes.impl.netty.NettyConnection;
 
@@ -21,7 +21,7 @@ public class NettyClientChannelInitializer extends NettyChannelInitializer {
             }
 
             @Override
-            public Protocol getProtocol() {
+            public PacketConverter getProtocol() {
                 return connection.getDefaultChannel().getProtocol();
             }
         };

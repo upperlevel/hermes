@@ -22,7 +22,7 @@ public class NettyServerConnection extends NettyConnection implements ServerConn
     public boolean onOpen() {
         ConnectionOpenEvent event = new ConnectionOpenEvent(this);
         parent.getEventManager().call(event);
-        if(event.isCancelled())
+        if (event.isCancelled())
             return false;
         return super.onOpen();
     }

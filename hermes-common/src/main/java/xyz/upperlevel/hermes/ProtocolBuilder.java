@@ -1,40 +1,38 @@
 package xyz.upperlevel.hermes;
 
-import xyz.upperlevel.hermes.Protocol.ConverterData;
 import xyz.upperlevel.hermes.channel.packets.ChannelMessagePacket;
-import xyz.upperlevel.hermes.impl.IdProtocol;
+import xyz.upperlevel.hermes.impl.id.IdProtocol;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class ProtocolBuilder {
-    private final List<ConverterData> converters;
+    private final Map<Class<? extends Packet>, PacketSide> packets;
 
-    public ProtocolBuilder(List<ConverterData> converters) {
-        assert converters != null;
-        this.converters = converters;
+    public ProtocolBuilder(Map<Class<? extends Packet>, PacketSide> packets) {
+        this.packets = packets;
     }
 
     public ProtocolBuilder() {
-        this(new ArrayList<>());
+        this(new LinkedHashMap<>());
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends Packet> ProtocolBuilder register(Class<T> clazz, PacketConverter<T> converter) {
-        converters.add(new ConverterData(clazz, converter));
+    public <T extends Packet> ProtocolBuilder packet(Class<T> clazz, PacketSide side) {
+        packets.put(clazz, side);
         return this;
     }
 
-    public ProtocolBuilder subChannels() {
-        register(ChannelMessagePacket.class, ChannelMessagePacket.CONVERTER);
+    public ProtocolBuilder enableSubChannels() {
+        packet(ChannelMessagePacket.class, PacketSide.SHARED);
         return this;
     }
 
     public Protocol build() {
-        return new IdProtocol(converters);
+        return new IdProtocol(packets);
     }
 
-    public List<ConverterData> buildList() {
-        return converters;
+    public Map<Class<? extends Packet>, PacketSide> asMap() {
+        return packets;
     }
 }

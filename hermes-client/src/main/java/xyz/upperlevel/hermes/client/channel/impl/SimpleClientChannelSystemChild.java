@@ -40,7 +40,7 @@ public class SimpleClientChannelSystemChild extends BaseChannelSystemChild imple
                 ChannelMessagePacket.newWakeupPacket((short) ChannelSystem.LAST_ID, channel.getName())
         );
 
-        if(stored_id != null) {
+        if (stored_id != null) {
             channel.setId(stored_id.shortValue());
             used[channel.getId() & 0xffff] = channel;
             onChannelActive(channel);//Call the event
@@ -51,7 +51,7 @@ public class SimpleClientChannelSystemChild extends BaseChannelSystemChild imple
     protected void onWakeup(short id, String name) {
         //System.out.println("Client: wake up! (" + id + " -> " + name + ")");
         Channel channel = getParent().get(name);
-        if(channel == null) {
+        if (channel == null) {
             pending.put(name, (int) id);
         } else {
             channel.setId(id);
@@ -61,5 +61,6 @@ public class SimpleClientChannelSystemChild extends BaseChannelSystemChild imple
     }
 
     @Override
-    protected void onConnectionClose(ConnectionCloseEvent event) {}
+    protected void onConnectionClose(ConnectionCloseEvent event) {
+    }
 }

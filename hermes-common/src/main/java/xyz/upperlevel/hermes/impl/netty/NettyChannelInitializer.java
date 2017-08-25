@@ -8,8 +8,9 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.MessageToByteEncoder;
-import xyz.upperlevel.hermes.Protocol;
+import io.netty.handler.codec.MessageToMessageEncoder;
 import xyz.upperlevel.hermes.Packet;
+import xyz.upperlevel.hermes.PacketConverter;
 
 import java.util.List;
 
@@ -19,14 +20,15 @@ public abstract class NettyChannelInitializer extends ChannelInitializer<SocketC
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
         ChannelPipeline p = ch.pipeline();
-
-        p.addLast("length-decoder", new LengthDecoder());
-
         ConnectionHandler handler = newConnectionHandler();
 
+        p.addLast("length-decoder", new LengthDecoder());
         p.addLast("packet-decoder", handler.new PacketDecoder());
 
-        p.addLast("encoder", handler.new PacketEncoder());
+
+        p.addLast("length-encoder", new LengthEncoder());
+        p.addLast("packet-encoder", handler.new PacketEncoder());
+
 
         p.addLast("executor", handler.getChannelHandler());
     }
@@ -37,17 +39,12 @@ public abstract class NettyChannelInitializer extends ChannelInitializer<SocketC
     public static abstract class ConnectionHandler {
         public abstract ChannelHandler getChannelHandler();
 
-        public abstract Protocol getProtocol();
+        public abstract PacketConverter getProtocol();
 
         public class PacketDecoder extends ByteToMessageDecoder {
             @Override
             protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-                byte[] data = new byte[in.readableBytes()];
-                in.readBytes(data);
-
-                Packet packet = getProtocol().convert(data);
-                assert packet != null;
-                out.add(packet);
+                out.add(getProtocol().fromData(in));
             }
         }
 
@@ -55,10 +52,17 @@ public abstract class NettyChannelInitializer extends ChannelInitializer<SocketC
             @SuppressWarnings("unchecked")
             @Override
             protected void encode(ChannelHandlerContext ctx, Packet msg, ByteBuf out) throws Exception {
-                byte[] bytes = getProtocol().convert(msg, (Class<Packet>)msg.getClass());
-                out.writeShort(bytes.length);
-                out.writeBytes(bytes);
+                getProtocol().toData(msg, out);
             }
+        }
+    }
+
+    public static class LengthEncoder extends MessageToMessageEncoder<ByteBuf> {
+
+        @Override
+        protected void encode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+            out.add(ctx.alloc().buffer(2).writeShort((short) in.readableBytes()));
+            out.add(in.retain());
         }
     }
 
@@ -67,12 +71,12 @@ public abstract class NettyChannelInitializer extends ChannelInitializer<SocketC
 
         @Override
         protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-            if(length == -1) {
-                if(in.readableBytes() < Short.BYTES)
+            if (length == -1) {
+                if (in.readableBytes() < Short.BYTES)
                     return;
                 length = in.readUnsignedShort();
             } else {
-                if(in.readableBytes() < length)
+                if (in.readableBytes() < length)
                     return;
                 out.add(in.readBytes(length));
                 length = -1;

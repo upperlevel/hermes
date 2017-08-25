@@ -1,7 +1,10 @@
 package xyz.upperlevel.hermes;
 
-public interface PacketConverter<T extends Packet> {
-    byte[] toData(T packet);
+import io.netty.buffer.ByteBuf;
 
-    T toPacket(byte[] data);
+public interface PacketConverter {
+
+    void toData(Packet packet, ByteBuf out);
+
+    Packet fromData(ByteBuf in);
 }

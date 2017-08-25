@@ -24,12 +24,6 @@ public class NettyClientOptions {
     private final int port;
     private final boolean tcpNoDelay;
 
-    //default values
-    public static class NettyClientOptionsBuilder {
-        private int threadNumber = 0; //0 means default
-        private boolean tcpNoDelay = true;
-    }
-
     public void openSync(BiConsumer<NettyClient, Exception> callback) {
         EventLoopGroup group = new NioEventLoopGroup(threadNumber);
         NettyClient client = new NettyClient();
@@ -75,7 +69,7 @@ public class NettyClientOptions {
     public Future<NettyClient> openAsync(String threadName) {
         CompletableFuture<NettyClient> future = new CompletableFuture<>();
         openAsync((s, e) -> {
-            if(e != null)
+            if (e != null)
                 future.completeExceptionally(e);
             else
                 future.complete(s);
@@ -85,5 +79,11 @@ public class NettyClientOptions {
 
     public Future<NettyClient> openAsync() {
         return openAsync(DEFAULT_THREAD_NAME);
+    }
+
+    //default values
+    public static class NettyClientOptionsBuilder {
+        private int threadNumber = 0; //0 means default
+        private boolean tcpNoDelay = true;
     }
 }
