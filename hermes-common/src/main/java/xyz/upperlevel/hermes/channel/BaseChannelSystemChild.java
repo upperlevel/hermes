@@ -4,6 +4,7 @@ import io.netty.buffer.Unpooled;
 import xyz.upperlevel.hermes.channel.events.ChannelActiveEvent;
 import xyz.upperlevel.hermes.channel.packets.ChannelMessagePacket;
 import xyz.upperlevel.hermes.event.impl.ConnectionCloseEvent;
+import xyz.upperlevel.hermes.util.DynamicArray;
 
 /**
  * The ChannelSystem & ChannelSystemChild classes help with the channel protocol:
@@ -13,11 +14,14 @@ import xyz.upperlevel.hermes.event.impl.ConnectionCloseEvent;
  *
  * when a wakeup packet is received it means that the other endpoint has registered a sub-channel, in order for the
  * sub-channel to be activated both endpoints must've sent and received the wakeup packet containing the channel's name
+ *
+ * the server is the endpoint that decides the channel's id so the server's wakeup packets are the only ones whose id is
+ * meaningful: it indicates the new channel's id to the server
  */
 public abstract class BaseChannelSystemChild implements ChannelSystemChild {
 
     //TODO: Reduce space usage
-    protected final Channel[] used = new Channel[ChannelSystem.MAX_IDS];
+    protected final DynamicArray<Channel> used = new DynamicArray<>(4, ChannelSystem.MAX_IDS);
 
     public void init() {
         getConnection()
@@ -28,7 +32,7 @@ public abstract class BaseChannelSystemChild implements ChannelSystemChild {
     @Override
     public void onReceive(ChannelMessagePacket packet) {
         int id = packet.id & 0xffff;
-        Channel ch = id == ChannelSystem.LAST_ID ? null : used[id & 0xffff];
+        Channel ch = id == ChannelSystem.LAST_ID ? null : used.get(id & 0xffff);
         if (ch != null) {//normal message
             onMessage(ch, packet.message);
         } else {//Wakeup message

@@ -44,7 +44,7 @@ public class SimpleClientChannelSystemChild extends BaseChannelSystemChild imple
 
         if (stored_id != null) {
             channel.setId(stored_id.shortValue());
-            used[channel.getId() & 0xffff] = channel;
+            used.set(channel.getId() & 0xffff, channel);
             onChannelActive(channel);//Call the event
         }
     }
@@ -57,7 +57,7 @@ public class SimpleClientChannelSystemChild extends BaseChannelSystemChild imple
             pending.put(name, (int) id);
         } else {
             channel.setId(id);
-            used[channel.getId() & 0xffff] = channel;
+            used.set(channel.getId() & 0xffff, channel);
             onChannelActive(channel);//Call the event
         }
     }
