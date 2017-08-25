@@ -19,8 +19,7 @@ import xyz.upperlevel.hermes.util.DynamicArray;
  * meaningful: it indicates the new channel's id to the server
  */
 public abstract class BaseChannelSystemChild implements ChannelSystemChild {
-
-    //TODO: Reduce space usage
+    
     protected final DynamicArray<Channel> used = new DynamicArray<>(4, ChannelSystem.MAX_IDS);
 
     public void init() {
