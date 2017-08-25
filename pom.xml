@@ -9,6 +9,10 @@
     <packaging>pom</packaging>
     <version>FINAL</version>
 
+    <properties>
+        <hermesVersion>1.1</hermesVersion>
+    </properties>
+
     <modules>
         <module>hermes-common</module>
         <module>hermes-client</module>

@@ -7,19 +7,13 @@ import xyz.upperlevel.hermes.Protocol;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class IdProtocol implements Protocol {
     @Getter
-    protected Map<Class<?>, IdPacketData<?>> registry;
+    protected Map<Class<? extends Packet>, PacketSide> registry;
 
     public IdProtocol(Map<Class<? extends Packet>, PacketSide> packets) {
-        registry = packets.entrySet()
-                .stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        e -> new IdPacketData<>(e.getKey(), e.getValue())
-                ));
+        registry = packets;
     }
 
     @Override
@@ -28,12 +22,8 @@ public class IdProtocol implements Protocol {
     }
 
     @Override
-    public Set<Class<?>> getRegistered() {
+    public Set<Class<? extends Packet>> getRegistered() {
         return registry.keySet();
-    }
-
-    public IdPacketData<?> getData(Class<?> clazz) {
-        return registry.get(clazz);
     }
 
     @Override

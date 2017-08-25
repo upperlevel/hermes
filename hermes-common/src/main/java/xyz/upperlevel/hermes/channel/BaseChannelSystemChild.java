@@ -5,31 +5,38 @@ import xyz.upperlevel.hermes.channel.events.ChannelActiveEvent;
 import xyz.upperlevel.hermes.channel.packets.ChannelMessagePacket;
 import xyz.upperlevel.hermes.event.impl.ConnectionCloseEvent;
 
-import javax.xml.bind.DatatypeConverter;
-
+/**
+ * The ChannelSystem & ChannelSystemChild classes help with the channel protocol:
+ * the protocol is set-up in a way that with one packet it can send specific sub-channel messages and register the sub channels
+ * if the id inside the received packet isn't registered (that's why ChannelSystem.LAST_ID isn't a valid id) the packet is recognized
+ * as a wakeup packet and the contents of the packet signals the channel's name
+ *
+ * when a wakeup packet is received it means that the other endpoint has registered a sub-channel, in order for the
+ * sub-channel to be activated both endpoints must've sent and received the wakeup packet containing the channel's name
+ */
 public abstract class BaseChannelSystemChild implements ChannelSystemChild {
 
     //TODO: Reduce space usage
     protected final Channel[] used = new Channel[ChannelSystem.MAX_IDS];
 
-    public BaseChannelSystemChild() {
-        getConnection().getEventManager().register(ConnectionCloseEvent.class, this::onConnectionClose);
+    public void init() {
+        getConnection()
+                .getEventManager()
+                .register(ConnectionCloseEvent.class, this::onConnectionClose);
     }
 
     @Override
     public void onReceive(ChannelMessagePacket packet) {
         int id = packet.id & 0xffff;
         Channel ch = id == ChannelSystem.LAST_ID ? null : used[id & 0xffff];
-        if (ch == null) {//Wakeup
-            System.out.println("WAKEUP! " + new String(packet.message, ChannelMessagePacket.CHARSET));
-            onWakeup(packet.id, new String(packet.message, ChannelMessagePacket.CHARSET));
-        } else {//Message
+        if (ch != null) {//normal message
             onMessage(ch, packet.message);
+        } else {//Wakeup message
+            onWakeup(packet.id, new String(packet.message, ChannelMessagePacket.CHARSET));
         }
     }
 
     protected void onMessage(Channel channel, byte[] message) {
-        System.out.println("CHANNEL SYSTEM: " + DatatypeConverter.printHexBinary(message));
         channel.receive(getConnection(), channel.getProtocol().fromData(Unpooled.wrappedBuffer(message)));
     }
 

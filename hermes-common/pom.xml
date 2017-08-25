@@ -11,5 +11,5 @@
     </parent>
 
     <artifactId>hermes-common</artifactId>
-    <version>1.1</version>
+    <version>${hermesVersion}</version>
 </project>

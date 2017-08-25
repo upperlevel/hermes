@@ -67,9 +67,8 @@ public abstract class NettyConnection extends BaseConnection {
         public void channelActive(final ChannelHandlerContext ctx) {
             handle = ctx.channel();
             if (!onOpen()) {
-                System.out.println("Connection refused");
                 ctx.close();
-            } else System.out.println("Connection active");
+            }
         }
 
         @Override

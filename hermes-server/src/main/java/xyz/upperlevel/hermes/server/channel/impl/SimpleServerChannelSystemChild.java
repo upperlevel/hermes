@@ -55,5 +55,6 @@ public class SimpleServerChannelSystemChild extends BaseChannelSystemChild imple
         if (this.connection != null)
             throw new IllegalStateException("Class already initialized");
         this.connection = connection;
+        super.init();
     }
 }

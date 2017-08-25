@@ -6,7 +6,7 @@ public interface Protocol {
 
     boolean isRegistered(Class<? extends Packet> packet);
 
-    Set<Class<?>> getRegistered();
+    Set<Class<? extends Packet>> getRegistered();
 
     PacketConverter compile(PacketSide side);
 

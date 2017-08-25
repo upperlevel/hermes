@@ -25,6 +25,11 @@ public class SimpleClientChannelSystem extends BaseChannelSystem implements Clie
     }
 
     @Override
+    public void init() {
+        child.init();
+    }
+
+    @Override
     protected void register0(Channel channel) {
         child.onChannelRegister(channel);
     }

@@ -47,7 +47,7 @@ public class DirectConnectionTest {
 
         {
             Protocol subProto = Protocol.builder()
-                    .packet(TestPacket.class, PacketSide.SHARED)
+                    .packet(PacketSide.SHARED, TestPacket.class)
                     .build();
 
             Channel subClCh = new Channel("sub").setProtocol(subProto, PacketSide.CLIENT);

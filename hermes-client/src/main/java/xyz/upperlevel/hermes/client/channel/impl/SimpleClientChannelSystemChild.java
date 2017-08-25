@@ -1,7 +1,6 @@
 package xyz.upperlevel.hermes.client.channel.impl;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import xyz.upperlevel.hermes.channel.BaseChannelSystemChild;
 import xyz.upperlevel.hermes.channel.Channel;
 import xyz.upperlevel.hermes.channel.ChannelSystem;
@@ -15,12 +14,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-@RequiredArgsConstructor
 public class SimpleClientChannelSystemChild extends BaseChannelSystemChild implements ClientChannelSystemChild {
     @Getter
     private final SimpleClientChannelSystem parent;
 
     private final Map<String, Integer> pending = new HashMap<>();
+
+    public SimpleClientChannelSystemChild(SimpleClientChannelSystem parent) {
+        this.parent = parent;
+    }
 
     @Override
     public Set<String> getPending() {

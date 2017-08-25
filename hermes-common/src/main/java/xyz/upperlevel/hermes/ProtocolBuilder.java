@@ -18,13 +18,13 @@ public class ProtocolBuilder {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends Packet> ProtocolBuilder packet(Class<T> clazz, PacketSide side) {
+    public <T extends Packet> ProtocolBuilder packet(PacketSide side, Class<T> clazz) {
         packets.put(clazz, side);
         return this;
     }
 
     public ProtocolBuilder enableSubChannels() {
-        packet(ChannelMessagePacket.class, PacketSide.SHARED);
+        packet(PacketSide.SHARED, ChannelMessagePacket.class);
         return this;
     }
 

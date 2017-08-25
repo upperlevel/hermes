@@ -7,4 +7,6 @@ public interface ClientChannelSystem extends ChannelSystem {
     Client getParent();
 
     ClientChannelSystemChild getChild();
+
+    void init();
 }

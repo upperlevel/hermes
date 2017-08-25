@@ -32,6 +32,7 @@ public class DirectClient implements Client {
     public DirectClient(Channel defaultChannel) {
         this.channelSystem = new SimpleClientChannelSystem(this);
         this.connection = new DirectClientConnection(this, defaultChannel, new EventManager(), channelSystem.getChild());
+        channelSystem.init();
     }
 
     @Override
