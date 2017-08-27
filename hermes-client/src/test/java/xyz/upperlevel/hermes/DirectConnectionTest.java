@@ -74,7 +74,7 @@ public class DirectConnectionTest {
         }
     }
 
-    public class TestListener implements PacketListener<TestPacket> {
+    public class TestListener implements SinglePacketListener<TestPacket> {
         public String lastString;
         public int lastInt;
         public int called;

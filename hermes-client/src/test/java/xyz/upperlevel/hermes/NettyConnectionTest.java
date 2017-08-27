@@ -126,7 +126,7 @@ public class NettyConnectionTest {
         System.out.println("Closed");
     }
 
-    public class TestListener implements PacketListener<TestPacket> {
+    public class TestListener implements SinglePacketListener<TestPacket> {
         public CountDownLatch latch;
         public String lastString;
         public int lastInt;

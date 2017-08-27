@@ -6,7 +6,11 @@ import lombok.experimental.Accessors;
 import xyz.upperlevel.event.impl.def.EventManager;
 import xyz.upperlevel.hermes.*;
 import xyz.upperlevel.hermes.channel.packets.ChannelMessagePacket;
+import xyz.upperlevel.hermes.reflect.PacketHandler;
+import xyz.upperlevel.hermes.reflect.PacketListener;
+import xyz.upperlevel.hermes.reflect.ReflectedPacketListener;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +26,7 @@ public class Channel {
     @Getter
     @Setter
     private int id = BaseChannelSystem.UNASSIGNED;
-    private Map<Class<? extends Packet>, List<PacketListener<?>>> listeners = new HashMap<>();
+    private Map<Class<? extends Packet>, List<SinglePacketListener<?>>> listeners = new HashMap<>();
     @Getter
     @Setter
     private PacketConverter protocol;
@@ -56,16 +60,27 @@ public class Channel {
     }
 
 
-    public <T extends Packet> void register(Class<T> clazz, PacketListener<T> listener) {
+    public <T extends Packet> void register(Class<T> clazz, SinglePacketListener<T> listener) {
         listeners.computeIfAbsent(clazz, c -> new ArrayList<>()).add(listener);
     }
 
+    @SuppressWarnings("unchecked")
+    public void register(PacketListener listener) {
+        for(Method m : listener.getClass().getDeclaredMethods()) {
+            PacketHandler handler = m.getAnnotation(PacketHandler.class);
+            if(handler != null) {
+                m.setAccessible(true);
+                ReflectedPacketListener l = new ReflectedPacketListener(m, listener);
+                register(l.getPacketClass(), l);
+            }
+        }
+    }
 
     @SuppressWarnings("unchecked")
     public void receive(Connection conn, Packet msg) {
-        List<PacketListener<?>> receivers = listeners.get(msg.getClass());
+        List<SinglePacketListener<?>> receivers = listeners.get(msg.getClass());
         if (receivers != null) {
-            for (PacketListener listener : receivers) {
+            for (SinglePacketListener listener : receivers) {
                 listener.onPacket(conn, msg);
             }
         }
