@@ -2,9 +2,10 @@ package xyz.upperlevel.hermes.server.impl.direct;
 
 import lombok.Getter;
 import lombok.Setter;
-import xyz.upperlevel.event.impl.def.EventManager;
+import xyz.upperlevel.event.EventManager;
 import xyz.upperlevel.hermes.Connection;
 import xyz.upperlevel.hermes.channel.Channel;
+import xyz.upperlevel.hermes.event.ConnectionOpenEvent;
 import xyz.upperlevel.hermes.server.Server;
 import xyz.upperlevel.hermes.server.channel.ServerChannelSystem;
 import xyz.upperlevel.hermes.server.channel.ServerChannelSystemChild;
@@ -54,8 +55,12 @@ public class DirectServer implements Server {
         conn.setDefaultChannel(defaultChannel);
         conn.setOther(connection);
         child.init(conn);
-        connections.add(conn);
-        return conn;
+        ConnectionOpenEvent event = new ConnectionOpenEvent(conn);
+        if (getEventManager().call(event)) {
+            connections.add(conn);
+            return conn;
+        } else
+            return null;
     }
 
     @Override

@@ -2,12 +2,12 @@ package xyz.upperlevel.hermes.impl.netty;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import xyz.upperlevel.event.impl.def.EventManager;
+import xyz.upperlevel.event.EventManager;
 import xyz.upperlevel.hermes.Packet;
 import xyz.upperlevel.hermes.channel.Channel;
 import xyz.upperlevel.hermes.channel.ChannelSystemChild;
-import xyz.upperlevel.hermes.event.impl.ConnectionCloseEvent;
-import xyz.upperlevel.hermes.event.impl.ConnectionOpenEvent;
+import xyz.upperlevel.hermes.event.ConnectionCloseEvent;
+import xyz.upperlevel.hermes.event.ConnectionOpenEvent;
 import xyz.upperlevel.hermes.impl.BaseConnection;
 
 public abstract class NettyConnection extends BaseConnection {

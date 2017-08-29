@@ -6,7 +6,7 @@ import xyz.upperlevel.hermes.channel.events.ChannelActiveEvent;
 import xyz.upperlevel.hermes.client.ClientConnection;
 import xyz.upperlevel.hermes.client.impl.netty.NettyClient;
 import xyz.upperlevel.hermes.client.impl.netty.NettyClientOptions;
-import xyz.upperlevel.hermes.event.impl.ConnectionOpenEvent;
+import xyz.upperlevel.hermes.event.ConnectionOpenEvent;
 import xyz.upperlevel.hermes.server.ServerConnection;
 import xyz.upperlevel.hermes.server.impl.netty.NettyServer;
 import xyz.upperlevel.hermes.server.impl.netty.NettyServerOptions;

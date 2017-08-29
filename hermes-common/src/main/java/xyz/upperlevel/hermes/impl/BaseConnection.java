@@ -2,7 +2,7 @@ package xyz.upperlevel.hermes.impl;
 
 import lombok.Getter;
 import lombok.Setter;
-import xyz.upperlevel.event.impl.def.EventManager;
+import xyz.upperlevel.event.EventManager;
 import xyz.upperlevel.hermes.Connection;
 import xyz.upperlevel.hermes.Packet;
 import xyz.upperlevel.hermes.channel.Channel;

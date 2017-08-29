@@ -1,8 +1,8 @@
 package xyz.upperlevel.hermes.server.impl.netty;
 
 import lombok.Getter;
-import xyz.upperlevel.hermes.event.impl.ConnectionCloseEvent;
-import xyz.upperlevel.hermes.event.impl.ConnectionOpenEvent;
+import xyz.upperlevel.hermes.event.ConnectionCloseEvent;
+import xyz.upperlevel.hermes.event.ConnectionOpenEvent;
 import xyz.upperlevel.hermes.impl.netty.NettyConnection;
 import xyz.upperlevel.hermes.server.ServerConnection;
 import xyz.upperlevel.hermes.server.channel.ServerChannelSystemChild;

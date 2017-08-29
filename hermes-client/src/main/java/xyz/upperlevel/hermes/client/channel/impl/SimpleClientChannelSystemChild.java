@@ -7,7 +7,7 @@ import xyz.upperlevel.hermes.channel.ChannelSystem;
 import xyz.upperlevel.hermes.channel.packets.ChannelMessagePacket;
 import xyz.upperlevel.hermes.client.ClientConnection;
 import xyz.upperlevel.hermes.client.channel.ClientChannelSystemChild;
-import xyz.upperlevel.hermes.event.impl.ConnectionCloseEvent;
+import xyz.upperlevel.hermes.event.ConnectionCloseEvent;
 
 import java.util.Collections;
 import java.util.HashMap;

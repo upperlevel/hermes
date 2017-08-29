@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import xyz.upperlevel.hermes.channel.BaseChannelSystemChild;
 import xyz.upperlevel.hermes.channel.Channel;
 import xyz.upperlevel.hermes.channel.packets.ChannelMessagePacket;
-import xyz.upperlevel.hermes.event.impl.ConnectionCloseEvent;
+import xyz.upperlevel.hermes.event.ConnectionCloseEvent;
 import xyz.upperlevel.hermes.server.ServerConnection;
 import xyz.upperlevel.hermes.server.channel.ServerChannelSystemChild;
 

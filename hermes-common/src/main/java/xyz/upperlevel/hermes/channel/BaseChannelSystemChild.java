@@ -3,7 +3,7 @@ package xyz.upperlevel.hermes.channel;
 import io.netty.buffer.Unpooled;
 import xyz.upperlevel.hermes.channel.events.ChannelActiveEvent;
 import xyz.upperlevel.hermes.channel.packets.ChannelMessagePacket;
-import xyz.upperlevel.hermes.event.impl.ConnectionCloseEvent;
+import xyz.upperlevel.hermes.event.ConnectionCloseEvent;
 import xyz.upperlevel.hermes.util.DynamicArray;
 
 /**
