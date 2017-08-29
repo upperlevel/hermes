@@ -1,5 +1,6 @@
 package xyz.upperlevel.hermes.reflect;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import xyz.upperlevel.hermes.Connection;
 import xyz.upperlevel.hermes.Packet;
@@ -8,6 +9,7 @@ import xyz.upperlevel.hermes.SinglePacketListener;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+@EqualsAndHashCode
 public class ReflectedPacketListener implements SinglePacketListener {
     private final Method listener;
     @Getter

@@ -47,6 +47,16 @@ public class ReflectedListenerTest implements PacketListener {
                 2,
                 called
         );
+
+        channel.unregister(this);
+
+        reset();
+        channel.receive(null, new Test1Packet());
+        channel.receive(null, new Test2Packet());
+        Assert.assertEquals(
+                0,
+                called
+        );
     }
 
 

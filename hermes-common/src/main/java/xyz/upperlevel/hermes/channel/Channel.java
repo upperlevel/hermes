@@ -76,6 +76,23 @@ public class Channel {
         }
     }
 
+    public <T extends Packet> boolean unregister(Class<T> clazz, SinglePacketListener<T> listener) {
+        List<SinglePacketListener<?>> registry = listeners.get(clazz);
+        return registry.remove(listener);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void unregister(PacketListener listener) {
+        for(Method m : listener.getClass().getDeclaredMethods()) {
+            PacketHandler handler = m.getAnnotation(PacketHandler.class);
+            if(handler != null) {
+                m.setAccessible(true);
+                ReflectedPacketListener l = new ReflectedPacketListener(m, listener);
+                unregister(l.getPacketClass(), l);
+            }
+        }
+    }
+
     @SuppressWarnings("unchecked")
     public void receive(Connection conn, Packet msg) {
         List<SinglePacketListener<?>> receivers = listeners.get(msg.getClass());
