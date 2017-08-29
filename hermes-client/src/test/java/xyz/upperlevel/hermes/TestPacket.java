@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 public class TestPacket implements Packet {
     public static Protocol PROTOCOL = Protocol.builder()
             .enableSubChannels()
-            .packet(PacketSide.SHARED, TestPacket.class)
+            .packet(PacketSide.SERVER, TestPacket.class)
             .build();
 
     public String testString;
