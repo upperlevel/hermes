@@ -51,8 +51,7 @@ public class NettyServer extends BaseServer {
         ServerChannelSystemChild child = channelSystem.createChild();
         NettyServerConnection conn = new NettyServerConnection(this, child);
         child.init(conn);
-        ConnectionOpenEvent event = new ConnectionOpenEvent(conn);
-        if (getEventManager().call(event)) {
+        if (conn.onOpen()) {
             connections.add(conn);
             return conn;
         } else
