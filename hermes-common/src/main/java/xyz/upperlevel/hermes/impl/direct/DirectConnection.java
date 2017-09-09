@@ -5,7 +5,6 @@ import io.netty.buffer.Unpooled;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.upperlevel.event.EventManager;
-import xyz.upperlevel.hermes.Connection;
 import xyz.upperlevel.hermes.Packet;
 import xyz.upperlevel.hermes.channel.Channel;
 import xyz.upperlevel.hermes.channel.ChannelSystemChild;
@@ -14,7 +13,7 @@ import xyz.upperlevel.hermes.impl.BaseConnection;
 public abstract class DirectConnection extends BaseConnection {
     @Getter
     @Setter
-    private Connection other;
+    private DirectConnection other;
 
     @Getter
     @Setter

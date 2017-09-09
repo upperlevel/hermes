@@ -22,7 +22,6 @@ public class DirectConnectionTest {
         DirectClient client = new DirectClient(clChannel);
 
         DirectServerConnection seConn = server.newConnection(client.getConnection());
-        client.getConnection().setOther(seConn);
 
         TestListener listener = new TestListener();
         clChannel.register(TestPacket.class, listener);
@@ -93,5 +92,4 @@ public class DirectConnectionTest {
             lastInt = packet.testInt;
         }
     }
-
 }

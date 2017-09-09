@@ -6,6 +6,7 @@ import xyz.upperlevel.event.EventManager;
 import xyz.upperlevel.hermes.Connection;
 import xyz.upperlevel.hermes.channel.Channel;
 import xyz.upperlevel.hermes.event.ConnectionOpenEvent;
+import xyz.upperlevel.hermes.impl.direct.DirectConnection;
 import xyz.upperlevel.hermes.server.Server;
 import xyz.upperlevel.hermes.server.channel.ServerChannelSystem;
 import xyz.upperlevel.hermes.server.channel.ServerChannelSystemChild;
@@ -49,11 +50,13 @@ public class DirectServer implements Server {
         this.eventManager = new EventManager();
     }
 
-    public DirectServerConnection newConnection(Connection connection) {
+    public DirectServerConnection newConnection(DirectConnection connection, boolean copy) {
         ServerChannelSystemChild child = channelSystem.createChild();
         DirectServerConnection conn = new DirectServerConnection(this, child);
         conn.setDefaultChannel(defaultChannel);
+        conn.setCopy(copy);
         conn.setOther(connection);
+        connection.setOther(conn);
         child.init(conn);
         ConnectionOpenEvent event = new ConnectionOpenEvent(conn);
         if (getEventManager().call(event)) {
@@ -61,6 +64,10 @@ public class DirectServer implements Server {
             return conn;
         } else
             return null;
+    }
+
+    public DirectServerConnection newConnection(DirectConnection connection) {
+        return newConnection(connection, true);
     }
 
     @Override
