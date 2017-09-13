@@ -1,0 +1,4 @@
+rootProject.name = 'hermes-parent'
+include ':hermes-common'
+include ':hermes-client'
+include ':hermes-server'

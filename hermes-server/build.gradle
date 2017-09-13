@@ -1,0 +1,5 @@
+description = 'The server-only implementation of hermes'
+
+dependencies {
+    compile project(':hermes-common')
+}

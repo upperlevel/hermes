@@ -1,0 +1,38 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "io.franzbecker:gradle-lombok:1.10"
+    }
+}
+
+allprojects  {
+    apply plugin: 'maven'
+
+    group = 'xyz.upperlevel.hermes'
+    version = '1.1'
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'io.franzbecker.gradle-lombok'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+  
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+
+  
+    dependencies {
+        compile group: 'xyz.upperlevel.event', name: 'event-api', version:'1.0.1'
+        compile group: 'io.netty', name: 'netty-all', version: '4.1.15.Final'
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+    }
+}
