@@ -29,7 +29,7 @@ public class SimpleServerChannelSystem extends BaseChannelSystem implements Serv
     protected void register0(Channel channel) {
         short id = (short) useNextId();
         channel.setId(id);
-        id_map[id & 0xffff] = channel;
+        idMap.set(id & 0xffff, channel);
         ChannelMessagePacket packet = ChannelMessagePacket.newWakeupPacket(id, channel.getName());
         for (SimpleServerChannelSystemChild ch : childs)
             ch.onChannelRegister(channel, packet);

@@ -1,5 +1,7 @@
 package xyz.upperlevel.hermes.channel;
 
+import xyz.upperlevel.hermes.util.DynamicArray;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -7,7 +9,7 @@ import java.util.Map;
 
 public abstract class BaseChannelSystem implements ChannelSystem {
     protected final Map<String, Channel> channels = new HashMap<>();
-    protected Channel[] id_map = new Channel[MAX_IDS];
+    protected DynamicArray<Channel> idMap = new DynamicArray<>(16, MAX_IDS);
     private int nextId = FIRST_ID;
 
     @Override
@@ -29,7 +31,7 @@ public abstract class BaseChannelSystem implements ChannelSystem {
     protected void updateNextId() {
         if (isOutOfIds())
             return;
-        while (id_map[nextId & 0xffff] != null)
+        while (idMap.get(nextId & 0xffff) != null)
             nextId++;
     }
 
@@ -51,7 +53,7 @@ public abstract class BaseChannelSystem implements ChannelSystem {
     @Override
     public Channel get(int id) {
         if (id >= FIRST_ID && id <= LAST_ID)
-            return id_map[id & 0xffff];
+            return idMap.get(id & 0xffff);
         return null;
     }
 
